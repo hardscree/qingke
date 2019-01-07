@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        a{
+            display: block;
+            width:300px;
+            height:100px;
+            text-align: center;
+            line-height: 100px;
+            border:1px solid #CCC;
+            margin: 30px auto auto;
+            position: relative;
+            overflow: hidden;
+        }
+        a input{
+            position: absolute;
+            left:0;
+            top:0;
+            width:1000px;
+            height:1000px;
+            opacity: 0;
+        }
+    </style>
+    <script src="https://cdn.bootcss.com/vConsole/3.2.0/vconsole.min.js"></script>
+    <script>
+        var vConsole = new VConsole();
+    </script>
+</head>
+<body>
+    <a href="javascript:;">
+        <input id="videoBox" type="file" accept="video/*" capture="camcorder">
+        录制视频
+    </a>
+    <a href="javascript:;" id="show">
+        视频内容
+    </a>
+    <script>
+        document.getElementById('show').addEventListener('click',function(){
+            var fileObj = document.getElementById('videoBox').files[0];
+               if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+                   alert("请您拍摄视频");
+                   return;
+               }
+               var formFile = new FormData();
+               formFile.append("id", "001");  
+               formFile.append("video", fileObj); //加入文件对象
+               console.log(formFile);
+               // ajax提交formfile
+        },false)
+    </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qingke.apiplatform.mapper.QingkeFaceMapper" >
+  <resultMap id="BaseResultMap" type="com.qingke.apiplatform.model.QingkeFace" >
+    <id column="f_id" property="fId" jdbcType="INTEGER" />
+    <result column="qk_numb" property="qkNumb" jdbcType="VARCHAR" />
+    <result column="biz_no" property="bizNo" jdbcType="VARCHAR" />
+    <result column="biz_id" property="bizId" jdbcType="VARCHAR" />
+    <result column="result" property="result" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="time_used" property="timeUsed" jdbcType="VARCHAR" />
+    <result column="rate" property="rate" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.qingke.apiplatform.model.QingkeFace" extends="BaseResultMap" >
+    <result column="json" property="json" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    f_id, qk_numb, biz_no, biz_id, result, status, time_used, rate
+  </sql>
+  <sql id="Blob_Column_List" >
+    json
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from qingke_face
+    where f_id = #{fId,jdbcType=INTEGER}
+  </select>
+  <select id="selectLatestByBizNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from qingke_face
+    where biz_no = #{bizNo,jdbcType=VARCHAR}
+    order by f_id desc
+    limit 0,1
+  </select>
+  <select id="selectLatestOkResult" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from qingke_face
+    where qk_numb = #{qkNumb,jdbcType=VARCHAR} and status='OK'
+    order by f_id desc
+    limit 0,1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from qingke_face
+    where f_id = #{fId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qingke.apiplatform.model.QingkeFace" >
+    insert into qingke_face (f_id, qk_numb, biz_no, 
+      biz_id, result, status, 
+      time_used, rate, json
+      )
+    values (#{fId,jdbcType=INTEGER}, #{qkNumb,jdbcType=VARCHAR}, #{bizNo,jdbcType=VARCHAR}, 
+      #{bizId,jdbcType=VARCHAR}, #{result,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{timeUsed,jdbcType=VARCHAR}, #{rate,jdbcType=VARCHAR}, #{json,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.qingke.apiplatform.model.QingkeFace" >
+    insert into qingke_face
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fId != null" >
+        f_id,
+      </if>
+      <if test="qkNumb != null" >
+        qk_numb,
+      </if>
+      <if test="bizNo != null" >
+        biz_no,
+      </if>
+      <if test="bizId != null" >
+        biz_id,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="timeUsed != null" >
+        time_used,
+      </if>
+      <if test="rate != null" >
+        rate,
+      </if>
+      <if test="json != null" >
+        json,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fId != null" >
+        #{fId,jdbcType=INTEGER},
+      </if>
+      <if test="qkNumb != null" >
+        #{qkNumb,jdbcType=VARCHAR},
+      </if>
+      <if test="bizNo != null" >
+        #{bizNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bizId != null" >
+        #{bizId,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="timeUsed != null" >
+        #{timeUsed,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null" >
+        #{rate,jdbcType=VARCHAR},
+      </if>
+      <if test="json != null" >
+        #{json,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qingke.apiplatform.model.QingkeFace" >
+    update qingke_face
+    <set >
+      <if test="qkNumb != null" >
+        qk_numb = #{qkNumb,jdbcType=VARCHAR},
+      </if>
+      <if test="bizNo != null" >
+        biz_no = #{bizNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bizId != null" >
+        biz_id = #{bizId,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="timeUsed != null" >
+        time_used = #{timeUsed,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null" >
+        rate = #{rate,jdbcType=VARCHAR},
+      </if>
+      <if test="json != null" >
+        json = #{json,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where f_id = #{fId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qingke.apiplatform.model.QingkeFace" >
+    update qingke_face
+    set qk_numb = #{qkNumb,jdbcType=VARCHAR},
+      biz_no = #{bizNo,jdbcType=VARCHAR},
+      biz_id = #{bizId,jdbcType=VARCHAR},
+      result = #{result,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      time_used = #{timeUsed,jdbcType=VARCHAR},
+      rate = #{rate,jdbcType=VARCHAR},
+      json = #{json,jdbcType=LONGVARCHAR}
+    where f_id = #{fId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qingke.apiplatform.model.QingkeFace" >
+    update qingke_face
+    set qk_numb = #{qkNumb,jdbcType=VARCHAR},
+      biz_no = #{bizNo,jdbcType=VARCHAR},
+      biz_id = #{bizId,jdbcType=VARCHAR},
+      result = #{result,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      time_used = #{timeUsed,jdbcType=VARCHAR},
+      rate = #{rate,jdbcType=VARCHAR}
+    where f_id = #{fId,jdbcType=INTEGER}
+  </update>
+</mapper>

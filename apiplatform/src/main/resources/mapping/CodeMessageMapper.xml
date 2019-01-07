@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qingke.apiplatform.mapper.CodeMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.qingke.apiplatform.model.CodeMessage" >
+    <id column="msg_id" property="msgId" jdbcType="INTEGER" />
+    <result column="to_username" property="toUsername" jdbcType="VARCHAR" />
+    <result column="from_username" property="fromUsername" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="msg_type" property="msgType" jdbcType="VARCHAR" />
+    <result column="event_type" property="eventType" jdbcType="VARCHAR" />
+    <result column="evnet_key" property="evnetKey" jdbcType="VARCHAR" />
+    <result column="ticket" property="ticket" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    msg_id, to_username, from_username, create_time, msg_type, event_type, evnet_key, 
+    ticket
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from code_message
+    where msg_id = #{msgId,jdbcType=INTEGER}
+  </select>
+  <select id="selectLatestByOpenId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select 
+  	<include refid="Base_Column_List" />
+    from code_message
+    where from_username = #{fromUsername,jdbcType=VARCHAR}    
+    order by msg_id desc
+    limit 0,1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from code_message
+    where msg_id = #{msgId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qingke.apiplatform.model.CodeMessage" >
+    insert into code_message (msg_id, to_username, from_username, 
+      create_time, msg_type, event_type, 
+      evnet_key, ticket)
+    values (#{msgId,jdbcType=INTEGER}, #{toUsername,jdbcType=VARCHAR}, #{fromUsername,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=BIGINT}, #{msgType,jdbcType=VARCHAR}, #{eventType,jdbcType=VARCHAR}, 
+      #{evnetKey,jdbcType=VARCHAR}, #{ticket,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qingke.apiplatform.model.CodeMessage" >
+    insert into code_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        msg_id,
+      </if>
+      <if test="toUsername != null" >
+        to_username,
+      </if>
+      <if test="fromUsername != null" >
+        from_username,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="msgType != null" >
+        msg_type,
+      </if>
+      <if test="eventType != null" >
+        event_type,
+      </if>
+      <if test="evnetKey != null" >
+        evnet_key,
+      </if>
+      <if test="ticket != null" >
+        ticket,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        #{msgId,jdbcType=INTEGER},
+      </if>
+      <if test="toUsername != null" >
+        #{toUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="fromUsername != null" >
+        #{fromUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="msgType != null" >
+        #{msgType,jdbcType=VARCHAR},
+      </if>
+      <if test="eventType != null" >
+        #{eventType,jdbcType=VARCHAR},
+      </if>
+      <if test="evnetKey != null" >
+        #{evnetKey,jdbcType=VARCHAR},
+      </if>
+      <if test="ticket != null" >
+        #{ticket,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qingke.apiplatform.model.CodeMessage" >
+    update code_message
+    <set >
+      <if test="toUsername != null" >
+        to_username = #{toUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="fromUsername != null" >
+        from_username = #{fromUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="msgType != null" >
+        msg_type = #{msgType,jdbcType=VARCHAR},
+      </if>
+      <if test="eventType != null" >
+        event_type = #{eventType,jdbcType=VARCHAR},
+      </if>
+      <if test="evnetKey != null" >
+        evnet_key = #{evnetKey,jdbcType=VARCHAR},
+      </if>
+      <if test="ticket != null" >
+        ticket = #{ticket,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where msg_id = #{msgId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qingke.apiplatform.model.CodeMessage" >
+    update code_message
+    set to_username = #{toUsername,jdbcType=VARCHAR},
+      from_username = #{fromUsername,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT},
+      msg_type = #{msgType,jdbcType=VARCHAR},
+      event_type = #{eventType,jdbcType=VARCHAR},
+      evnet_key = #{evnetKey,jdbcType=VARCHAR},
+      ticket = #{ticket,jdbcType=VARCHAR}
+    where msg_id = #{msgId,jdbcType=INTEGER}
+  </update>
+</mapper>

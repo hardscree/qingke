@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>监测浏览器是否支持html5</title>
+    <style>
+        body {
+        font-size:12px;
+        }
+        canvas {
+            border:1px solid #ccc;
+            background:#ffd800;
+        
+        }
+    </style>
+</head>
+<body>
+   
+  <input type="file" name="video" id="file" accept="video/*;capture=camcorder">
+ <canvas id="mycanvas" width="200" height="200">
+     当前浏览器不支持全新的画布标签
+ </canvas>
+ <script>
+   document.querySelector('#file').addEventListener('change',function(e){
+    var item = e.target.files[0];
+    var data = new FormData;
+                        data.append('video', item);
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', 'https://wx.aivplus.com/api/qingke/video?qkNumb=10', true);
+//xhr.open('POST', 'http://47.95.194.119:9008/api/qingke/video?qkNumb=10', true);
+                        //事件监听
+                        xhr.onreadystatechange = function () {
+                            if (xhr.readyState == 4 && xhr.status == 200) {
+                                //上传完成了
+                                alert(xhr.responseText);
+                            }
+                        };
+                        xhr.onerror = function (error) {
+                            throw new Error(error);
+                        };
+                        xhr.upload && (xhr.upload.onprogress = function (e) {
+                           console.log(parseInt((e.loaded / e.total) * 100))
+                        });
+                        xhr.send(data);
+},false);
+   </script>
+</body>
+</html>

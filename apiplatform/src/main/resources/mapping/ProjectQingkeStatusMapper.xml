@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qingke.apiplatform.mapper.ProjectQingkeStatusMapper" >
+  <resultMap id="BaseResultMap" type="com.qingke.apiplatform.model.ProjectQingkeStatus" >
+    <result column="qkstatus_numb" property="qkstatusNumb" jdbcType="INTEGER" />
+    <result column="qkstatus_name" property="qkstatusName" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.qingke.apiplatform.model.ProjectQingkeStatus" >
+    insert into project_qingke_status (qkstatus_numb, qkstatus_name)
+    values (#{qkstatusNumb,jdbcType=INTEGER}, #{qkstatusName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qingke.apiplatform.model.ProjectQingkeStatus" >
+    insert into project_qingke_status
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="qkstatusNumb != null" >
+        qkstatus_numb,
+      </if>
+      <if test="qkstatusName != null" >
+        qkstatus_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="qkstatusNumb != null" >
+        #{qkstatusNumb,jdbcType=INTEGER},
+      </if>
+      <if test="qkstatusName != null" >
+        #{qkstatusName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id=" " parameterType="com.qingke.apiplatform.model.ProjectQingke">
+    update project_qingke
+    <set>
+      <if test="signStatus != null">
+        sign_status = #{signStatus,jdbcType=INTEGER},
+      </if>
+      <if test="signUrl != null">
+        sign_url = #{signUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="focusTime != null">
+        focus_time = #{focusTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusUpdatetime != null">
+        status_updatetime = #{statusUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pQkStatus != null">
+        p_qk_status = #{pQkStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where p_numb = #{pNumb,jdbcType=INTEGER} and qk_numb=#{qkNumb,jdbcType=INTEGER}
+  </update>
+</mapper>

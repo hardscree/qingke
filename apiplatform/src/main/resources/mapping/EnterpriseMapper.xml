@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qingke.apiplatform.mapper.EnterpriseMapper">
+  <resultMap id="BaseResultMap" type="com.qingke.apiplatform.model.Enterprise">
+    <id column="et_numb" jdbcType="INTEGER" property="etNumb" />
+    <result column="et_sname" jdbcType="VARCHAR" property="etSname" />
+    <result column="et_fname" jdbcType="VARCHAR" property="etFname" />
+    <result column="et_type" jdbcType="INTEGER" property="etType" />
+    <result column="et_address" jdbcType="VARCHAR" property="etAddress" />
+    <result column="credit_code" jdbcType="VARCHAR" property="creditCode" />
+    <result column="reg_capita" jdbcType="VARCHAR" property="regCapita" />
+    <result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
+    <result column="et_linkman" jdbcType="VARCHAR" property="etLinkman" />
+    <result column="et_phone" jdbcType="VARCHAR" property="etPhone" />
+    <result column="et_email" jdbcType="VARCHAR" property="etEmail" />
+    <result column="et_Date" jdbcType="TIMESTAMP" property="etDate" />
+    <result column="et_license_url" jdbcType="VARCHAR" property="etLicenseUrl" />
+    <result column="et_status" jdbcType="BIT" property="etStatus" />
+    <result column="et_comment" jdbcType="VARCHAR" property="etComment" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    et_numb, et_sname, et_fname, et_type, et_address, credit_code, reg_capita, legal_person, 
+    et_linkman, et_phone, et_email, et_Date, et_license_url, et_status, et_comment
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from enterprise
+    where et_numb = #{etNumb,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from enterprise
+    where et_numb = #{etNumb,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qingke.apiplatform.model.Enterprise">
+    insert into enterprise (et_numb, et_sname, et_fname, 
+      et_type, et_address, credit_code, 
+      reg_capita, legal_person, et_linkman, 
+      et_phone, et_email, et_Date, 
+      et_license_url, et_status, et_comment
+      )
+    values (#{etNumb,jdbcType=INTEGER}, #{etSname,jdbcType=VARCHAR}, #{etFname,jdbcType=VARCHAR}, 
+      #{etType,jdbcType=INTEGER}, #{etAddress,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR}, 
+      #{regCapita,jdbcType=VARCHAR}, #{legalPerson,jdbcType=VARCHAR}, #{etLinkman,jdbcType=VARCHAR}, 
+      #{etPhone,jdbcType=VARCHAR}, #{etEmail,jdbcType=VARCHAR}, #{etDate,jdbcType=TIMESTAMP}, 
+      #{etLicenseUrl,jdbcType=VARCHAR}, #{etStatus,jdbcType=BIT}, #{etComment,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.qingke.apiplatform.model.Enterprise">
+    <selectKey keyProperty='etNumb' resultType='int' order='AFTER'  >
+      select LAST_INSERT_ID();
+    </selectKey>
+    insert into enterprise
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="etNumb != null">
+        et_numb,
+      </if>
+      <if test="etSname != null">
+        et_sname,
+      </if>
+      <if test="etFname != null">
+        et_fname,
+      </if>
+      <if test="etType != null">
+        et_type,
+      </if>
+      <if test="etAddress != null">
+        et_address,
+      </if>
+      <if test="creditCode != null">
+        credit_code,
+      </if>
+      <if test="regCapita != null">
+        reg_capita,
+      </if>
+      <if test="legalPerson != null">
+        legal_person,
+      </if>
+      <if test="etLinkman != null">
+        et_linkman,
+      </if>
+      <if test="etPhone != null">
+        et_phone,
+      </if>
+      <if test="etEmail != null">
+        et_email,
+      </if>
+      <if test="etDate != null">
+        et_Date,
+      </if>
+      <if test="etLicenseUrl != null">
+        et_license_url,
+      </if>
+      <if test="etStatus != null">
+        et_status,
+      </if>
+      <if test="etComment != null">
+        et_comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="etNumb != null">
+        #{etNumb,jdbcType=INTEGER},
+      </if>
+      <if test="etSname != null">
+        #{etSname,jdbcType=VARCHAR},
+      </if>
+      <if test="etFname != null">
+        #{etFname,jdbcType=VARCHAR},
+      </if>
+      <if test="etType != null">
+        #{etType,jdbcType=INTEGER},
+      </if>
+      <if test="etAddress != null">
+        #{etAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null">
+        #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="regCapita != null">
+        #{regCapita,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPerson != null">
+        #{legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="etLinkman != null">
+        #{etLinkman,jdbcType=VARCHAR},
+      </if>
+      <if test="etPhone != null">
+        #{etPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="etEmail != null">
+        #{etEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="etDate != null">
+        #{etDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etLicenseUrl != null">
+        #{etLicenseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="etStatus != null">
+        #{etStatus,jdbcType=BIT},
+      </if>
+      <if test="etComment != null">
+        #{etComment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qingke.apiplatform.model.Enterprise">
+    update enterprise
+    <set>
+      <if test="etSname != null">
+        et_sname = #{etSname,jdbcType=VARCHAR},
+      </if>
+      <if test="etFname != null">
+        et_fname = #{etFname,jdbcType=VARCHAR},
+      </if>
+      <if test="etType != null">
+        et_type = #{etType,jdbcType=INTEGER},
+      </if>
+      <if test="etAddress != null">
+        et_address = #{etAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null">
+        credit_code = #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="regCapita != null">
+        reg_capita = #{regCapita,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPerson != null">
+        legal_person = #{legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="etLinkman != null">
+        et_linkman = #{etLinkman,jdbcType=VARCHAR},
+      </if>
+      <if test="etPhone != null">
+        et_phone = #{etPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="etEmail != null">
+        et_email = #{etEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="etDate != null">
+        et_Date = #{etDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="etLicenseUrl != null">
+        et_license_url = #{etLicenseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="etStatus != null">
+        et_status = #{etStatus,jdbcType=BIT},
+      </if>
+      <if test="etComment != null">
+        et_comment = #{etComment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where et_numb = #{etNumb,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qingke.apiplatform.model.Enterprise">
+    update enterprise
+    set et_sname = #{etSname,jdbcType=VARCHAR},
+      et_fname = #{etFname,jdbcType=VARCHAR},
+      et_type = #{etType,jdbcType=INTEGER},
+      et_address = #{etAddress,jdbcType=VARCHAR},
+      credit_code = #{creditCode,jdbcType=VARCHAR},
+      reg_capita = #{regCapita,jdbcType=VARCHAR},
+      legal_person = #{legalPerson,jdbcType=VARCHAR},
+      et_linkman = #{etLinkman,jdbcType=VARCHAR},
+      et_phone = #{etPhone,jdbcType=VARCHAR},
+      et_email = #{etEmail,jdbcType=VARCHAR},
+      et_Date = #{etDate,jdbcType=TIMESTAMP},
+      et_license_url = #{etLicenseUrl,jdbcType=VARCHAR},
+      et_status = #{etStatus,jdbcType=BIT},
+      et_comment = #{etComment,jdbcType=VARCHAR}
+    where et_numb = #{etNumb,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByKeyword" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from enterprise
+    <bind name="pattern" value="'%' + keyword + '%'" />
+    where et_sname LIKE #{pattern}
+  </select>
+
+</mapper>

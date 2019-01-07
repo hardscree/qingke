@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qingke.apiplatform.mapper.ProjectMapper">
+
+  <resultMap id="BaseResultMap" type="com.qingke.apiplatform.model.Project">
+    <id column="p_numb" jdbcType="INTEGER" property="pNumb" />
+    <result column="et_numb" jdbcType="INTEGER" property="etNumb" />
+    <result column="p_name" jdbcType="VARCHAR" property="pName" />
+    <result column="p_type" jdbcType="INTEGER" property="pType" />
+    <result column="service_charge" jdbcType="DECIMAL" property="serviceCharge" />
+    <result column="open_account" jdbcType="DECIMAL" property="openAccount" />
+    <result column="p_principal" jdbcType="VARCHAR" property="pPrincipal" />
+    <result column="et_principal" jdbcType="VARCHAR" property="etPrincipal" />
+    <result column="et_phone" jdbcType="VARCHAR" property="etPhone" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="p_status" jdbcType="INTEGER" property="pStatus" />
+    <result column="qk_quantity" jdbcType="INTEGER" property="qkQuantity" />
+    <result column="qk_link" jdbcType="INTEGER" property="qkLink" />
+    <result column="p_content" jdbcType="VARCHAR" property="pContent" />
+    <result column="p_operator" jdbcType="VARCHAR" property="pOperator" />
+    <result column="p_code_url" jdbcType="VARCHAR" property="pCodeUrl" />
+    <result column="wx_code_url" jdbcType="VARCHAR" property="wxCodeUrl" />
+    <result column="wx_ticket" jdbcType="VARCHAR" property="wxTicket" />
+    <result column="payment_type" jdbcType="INTEGER" property="paymentType"/>
+  </resultMap>
+
+  <resultMap id="ProjectEntity" type="com.qingke.apiplatform.entity.admin.ProjectEntity" extends="BaseResultMap">
+    <result property="enterpriseName" column="enterpriseName" jdbcType="VARCHAR"></result>
+    <result property="waitAudit" column="waitAudit" jdbcType="INTEGER"></result>
+    <result property="uploadLicenseNum" column="uploadLicenseNum" jdbcType="INTEGER"></result>
+  </resultMap>
+  <sql id="Base_Column_List">
+    p_numb, et_numb, p_name, p_type, service_charge, open_account, p_principal, et_principal, 
+    et_phone, create_time, begin_time, end_time, update_time, p_status, qk_quantity, 
+    qk_link, p_content, p_operator,p_code_url,wx_code_url,wx_ticket
+  </sql>
+
+  <sql id="ProjectEntityList">
+    p.*,e.et_sname as enterpriseName,
+    (select count(1) from project_qingke where
+    sign_status = 2 and project_qingke.p_numb = p.p_numb) as waitAudit,
+    (select count(1) p_numb from project_qingke inner join qingke on
+    project_qingke.qk_numb = qingke.qk_numb where project_qingke.p_numb=p.p_numb
+    and qingke.qk_license_status=1) as uploadLicenseNum
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from project
+    where p_numb = #{pNumb,jdbcType=INTEGER}
+  </select>
+
+  <select id="getProjectList" parameterType="com.qingke.apiplatform.entity.admin.ProjectQueryEntity" resultMap="ProjectEntity">
+    select
+    <include refid="ProjectEntityList" />
+    from project p inner join enterprise e
+    on p.et_numb = e.et_numb
+    where 1=1
+
+    <if test="query.projectName!=null and query.projectName!=''">
+      <bind name="pattern" value="'%' + query.projectName + '%'" />
+      and p_name LIKE #{pattern}
+    </if>
+
+    <if test="query.projectState != -1">
+    and p_status = #{query.projectState,jdbcType=INTEGER}
+    </if>
+
+    <if test="query.createDateStart!=null and query.createDateStart!=''">
+    and <![CDATA[create_time >= #{query.createDateStart,jdbcType=VARCHAR}]]>
+    </if>
+
+    <if test="query.createDateEnd!=null and query.createDateEnd!=''">
+    and <![CDATA[create_time <= #{query.createDateEnd,jdbcType=VARCHAR}]]>
+    </if>
+
+    <if test="query.enterpriseName!= null and query.enterpriseName!=''">
+      <bind name="pattern" value="'%' + query.enterpriseName + '%'" />
+      and e.et_sname LIKE #{pattern}
+    </if>
+
+    <if test="query.projectId!=null and query.projectId>0">
+      and p_numb = #{query.projectId}
+    </if>
+
+    order by p.p_numb desc
+  </select>
+
+  <select id="getProjectById" resultMap="ProjectEntity">
+    select
+    <include refid="ProjectEntityList" />
+    from project p inner join enterprise e
+    on p.et_numb = e.et_numb
+    where 1=1 and p.p_numb = #{projectId,jdbcType=INTEGER} order by p.p_numb desc
+  </select>
+
+  <select id="getProjectByQingkeId" resultMap="ProjectEntity">
+    select
+    <include refid="ProjectEntityList" />
+    from project p left join enterprise e
+    on p.et_numb = e.et_numb left join project_qingke pq on p.p_numb = pq.p_numb
+    where 1=1 and pq.qk_numb = #{qingkeId,jdbcType=INTEGER} order by pq.focus_time
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from project
+    where p_numb = #{pNumb,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qingke.apiplatform.model.Project">
+    <selectKey keyProperty='pNumb' resultType='int' order='AFTER'  >
+      select LAST_INSERT_ID();
+    </selectKey>
+    insert into project (p_numb, et_numb, p_name, 
+      p_type, service_charge, open_account, 
+      p_principal, et_principal, et_phone, 
+      create_time, begin_time, end_time, 
+      update_time, p_status, qk_quantity, 
+      qk_link, p_content, p_operator
+      )
+    values (#{pNumb,jdbcType=INTEGER}, #{etNumb,jdbcType=INTEGER}, #{pName,jdbcType=VARCHAR}, 
+      #{pType,jdbcType=INTEGER}, #{serviceCharge,jdbcType=DECIMAL}, #{openAccount,jdbcType=DECIMAL}, 
+      #{pPrincipal,jdbcType=VARCHAR}, #{etPrincipal,jdbcType=VARCHAR}, #{etPhone,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{beginTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{pStatus,jdbcType=INTEGER}, #{qkQuantity,jdbcType=INTEGER}, 
+      #{qkLink,jdbcType=INTEGER}, #{pContent,jdbcType=VARCHAR}, #{pOperator,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.qingke.apiplatform.model.Project">
+    insert into project
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pNumb != null">
+        p_numb,
+      </if>
+      <if test="etNumb != null">
+        et_numb,
+      </if>
+      <if test="pName != null">
+        p_name,
+      </if>
+      <if test="pType != null">
+        p_type,
+      </if>
+      <if test="serviceCharge != null">
+        service_charge,
+      </if>
+      <if test="openAccount != null">
+        open_account,
+      </if>
+      <if test="pPrincipal != null">
+        p_principal,
+      </if>
+      <if test="etPrincipal != null">
+        et_principal,
+      </if>
+      <if test="etPhone != null">
+        et_phone,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="beginTime != null">
+        begin_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="pStatus != null">
+        p_status,
+      </if>
+      <if test="qkQuantity != null">
+        qk_quantity,
+      </if>
+      <if test="qkLink != null">
+        qk_link,
+      </if>
+      <if test="pContent != null">
+        p_content,
+      </if>
+      <if test="pOperator != null">
+        p_operator,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pNumb != null">
+        #{pNumb,jdbcType=INTEGER},
+      </if>
+      <if test="etNumb != null">
+        #{etNumb,jdbcType=INTEGER},
+      </if>
+      <if test="pName != null">
+        #{pName,jdbcType=VARCHAR},
+      </if>
+      <if test="pType != null">
+        #{pType,jdbcType=INTEGER},
+      </if>
+      <if test="serviceCharge != null">
+        #{serviceCharge,jdbcType=DECIMAL},
+      </if>
+      <if test="openAccount != null">
+        #{openAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="pPrincipal != null">
+        #{pPrincipal,jdbcType=VARCHAR},
+      </if>
+      <if test="etPrincipal != null">
+        #{etPrincipal,jdbcType=VARCHAR},
+      </if>
+      <if test="etPhone != null">
+        #{etPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime != null">
+        #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pStatus != null">
+        #{pStatus,jdbcType=INTEGER},
+      </if>
+      <if test="qkQuantity != null">
+        #{qkQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="qkLink != null">
+        #{qkLink,jdbcType=INTEGER},
+      </if>
+      <if test="pContent != null">
+        #{pContent,jdbcType=VARCHAR},
+      </if>
+      <if test="pOperator != null">
+        #{pOperator,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qingke.apiplatform.model.Project">
+    update project
+    <set>
+      <if test="etNumb != null">
+        et_numb = #{etNumb,jdbcType=INTEGER},
+      </if>
+      <if test="pName != null">
+        p_name = #{pName,jdbcType=VARCHAR},
+      </if>
+      <if test="pType != null">
+        p_type = #{pType,jdbcType=INTEGER},
+      </if>
+      <if test="serviceCharge != null">
+        service_charge = #{serviceCharge,jdbcType=DECIMAL},
+      </if>
+      <if test="openAccount != null">
+        open_account = #{openAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="pPrincipal != null">
+        p_principal = #{pPrincipal,jdbcType=VARCHAR},
+      </if>
+      <if test="etPrincipal != null">
+        et_principal = #{etPrincipal,jdbcType=VARCHAR},
+      </if>
+      <if test="etPhone != null">
+        et_phone = #{etPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime != null">
+        begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pStatus != null">
+        p_status = #{pStatus,jdbcType=INTEGER},
+      </if>
+      <if test="qkQuantity != null">
+        qk_quantity = #{qkQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="qkLink != null">
+        qk_link = #{qkLink,jdbcType=INTEGER},
+      </if>
+      <if test="pContent != null">
+        p_content = #{pContent,jdbcType=VARCHAR},
+      </if>
+      <if test="pOperator != null">
+        p_operator = #{pOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="pCodeUrl != null">
+      	p_code_url = #{pCodeUrl, jdbcType=VARCHAR},
+      </if>
+      <if test="wxCodeUrl != null">
+      	wx_code_url = #{wxCodeUrl, jdbcType=VARCHAR},
+      </if>
+      <if test="wxTicket != null">
+      	wx_ticket = #{wxTicket, jdbcType=VARCHAR},
+      </if>
+    </set>
+    where p_numb = #{pNumb,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qingke.apiplatform.model.Project">
+    update project
+    set et_numb = #{etNumb,jdbcType=INTEGER},
+      p_name = #{pName,jdbcType=VARCHAR},
+      p_type = #{pType,jdbcType=INTEGER},
+      service_charge = #{serviceCharge,jdbcType=DECIMAL},
+      open_account = #{openAccount,jdbcType=DECIMAL},
+      p_principal = #{pPrincipal,jdbcType=VARCHAR},
+      et_principal = #{etPrincipal,jdbcType=VARCHAR},
+      et_phone = #{etPhone,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      p_status = #{pStatus,jdbcType=INTEGER},
+      qk_quantity = #{qkQuantity,jdbcType=INTEGER},
+      qk_link = #{qkLink,jdbcType=INTEGER},
+      p_content = #{pContent,jdbcType=VARCHAR},
+      p_operator = #{pOperator,jdbcType=VARCHAR}
+    where p_numb = #{pNumb,jdbcType=INTEGER}
+  </update>
+</mapper>

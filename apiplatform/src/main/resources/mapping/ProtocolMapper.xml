@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qingke.apiplatform.mapper.ProtocolMapper" >
+  <resultMap id="BaseResultMap" type="com.qingke.apiplatform.model.Protocol" >
+    <id column="pro_numb" property="proNumb" jdbcType="INTEGER" />
+    <result column="p_numb" property="pNumb" jdbcType="INTEGER" />
+    <result column="pro_type" property="proType" jdbcType="INTEGER" />
+    <result column="pro_photo_url" property="proPhotoUrl" jdbcType="VARCHAR" />
+    <result column="pro_photo_sort" property="proPhotoSort" jdbcType="INTEGER" />
+    <result column="upload_date" property="uploadDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.qingke.apiplatform.model.Protocol" extends="BaseResultMap" >
+    <result column="pro_content" property="proContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    pro_numb, p_numb, pro_type, pro_photo_url, pro_photo_sort, upload_date
+  </sql>
+  <sql id="Blob_Column_List" >
+    pro_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from protocol
+    where pro_numb = #{proNumb,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByProjectId" resultMap="ResultMapWithBLOBs"  parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from protocol
+    where p_numb = #{projectId,jdbcType=INTEGER} order by pro_photo_sort
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from protocol
+    where pro_numb = #{proNumb,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qingke.apiplatform.model.Protocol" >
+    insert into protocol (pro_numb, p_numb, pro_type,
+      pro_photo_url, pro_photo_sort, upload_date,
+      pro_content)
+    values (#{proNumb,jdbcType=INTEGER}, #{pNumb,jdbcType=INTEGER}, #{proType,jdbcType=INTEGER},
+      #{proPhotoUrl,jdbcType=VARCHAR}, #{proPhotoSort,jdbcType=INTEGER}, #{uploadDate,jdbcType=TIMESTAMP},
+      #{proContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qingke.apiplatform.model.Protocol" >
+    insert into protocol
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="proNumb != null" >
+        pro_numb,
+      </if>
+      <if test="pNumb != null" >
+        p_numb,
+      </if>
+      <if test="proType != null" >
+        pro_type,
+      </if>
+      <if test="proPhotoUrl != null" >
+        pro_photo_url,
+      </if>
+      <if test="proPhotoSort != null" >
+        pro_photo_sort,
+      </if>
+      <if test="uploadDate != null" >
+        upload_date,
+      </if>
+      <if test="proContent != null" >
+        pro_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="proNumb != null" >
+        #{proNumb,jdbcType=INTEGER},
+      </if>
+      <if test="pNumb != null" >
+        #{pNumb,jdbcType=INTEGER},
+      </if>
+      <if test="proType != null" >
+        #{proType,jdbcType=INTEGER},
+      </if>
+      <if test="proPhotoUrl != null" >
+        #{proPhotoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="proPhotoSort != null" >
+        #{proPhotoSort,jdbcType=INTEGER},
+      </if>
+      <if test="uploadDate != null" >
+        #{uploadDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proContent != null" >
+        #{proContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qingke.apiplatform.model.Protocol" >
+    update protocol
+    <set >
+      <if test="pNumb != null" >
+        p_numb = #{pNumb,jdbcType=INTEGER},
+      </if>
+      <if test="proType != null" >
+        pro_type = #{proType,jdbcType=INTEGER},
+      </if>
+      <if test="proPhotoUrl != null" >
+        pro_photo_url = #{proPhotoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="proPhotoSort != null" >
+        pro_photo_sort = #{proPhotoSort,jdbcType=INTEGER},
+      </if>
+      <if test="uploadDate != null" >
+        upload_date = #{uploadDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proContent != null" >
+        pro_content = #{proContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where pro_numb = #{proNumb,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qingke.apiplatform.model.Protocol" >
+    update protocol
+    set p_numb = #{pNumb,jdbcType=INTEGER},
+      pro_type = #{proType,jdbcType=INTEGER},
+      pro_photo_url = #{proPhotoUrl,jdbcType=VARCHAR},
+      pro_photo_sort = #{proPhotoSort,jdbcType=INTEGER},
+      upload_date = #{uploadDate,jdbcType=TIMESTAMP},
+      pro_content = #{proContent,jdbcType=LONGVARCHAR}
+    where pro_numb = #{proNumb,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qingke.apiplatform.model.Protocol" >
+    update protocol
+    set p_numb = #{pNumb,jdbcType=INTEGER},
+      pro_type = #{proType,jdbcType=INTEGER},
+      pro_photo_url = #{proPhotoUrl,jdbcType=VARCHAR},
+      pro_photo_sort = #{proPhotoSort,jdbcType=INTEGER},
+      upload_date = #{uploadDate,jdbcType=TIMESTAMP}
+    where pro_numb = #{proNumb,jdbcType=INTEGER}
+  </update>
+
+
+</mapper>

@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qingke.apiplatform.mapper.QingkeMapper" >
+  <resultMap id="BaseResultMap" type="com.qingke.apiplatform.model.Qingke" >
+    <id column="qk_numb" property="qkNumb" jdbcType="INTEGER" />
+    <result column="qk_name" property="qkName" jdbcType="VARCHAR" />
+    <result column="qk_openId" property="qkOpenid" jdbcType="VARCHAR" />
+    <result column="qk_sex" property="qkSex" jdbcType="BIT" />
+    <result column="qk_nation" property="qkNation" jdbcType="VARCHAR" />
+    <result column="qk_birth" property="qkBirth" jdbcType="DATE" />
+    <result column="qk_phone" property="qkPhone" jdbcType="VARCHAR" />
+    <result column="qk_id" property="qkId" jdbcType="VARCHAR" />
+    <result column="qkid_frontphoto_url" property="qkidFrontphotoUrl" jdbcType="VARCHAR" />
+    <result column="qkid_backphoto_url" property="qkidBackphotoUrl" jdbcType="VARCHAR" />
+    <result column="qkid_status" property="qkidStatus" jdbcType="INTEGER" />
+    <result column="qkid_address" property="qkidAddress" jdbcType="VARCHAR" />
+    <result column="qkid_validity" property="qkidValidity" jdbcType="VARCHAR" />
+    <result column="qk_video_url" property="qkVideoUrl" jdbcType="VARCHAR" />
+    <result column="qk_video_status" property="qkVideoStatus" jdbcType="INTEGER" />
+    <result column="qk_video_rate" property="qkVideoRate" jdbcType="VARCHAR" />
+    <result column="qk_sign_url" property="qkSignUrl" jdbcType="VARCHAR" />
+    <result column="qk_sign_status" property="qkSignStatus" jdbcType="INTEGER" />
+    <result column="qk_license_status" property="qkLicenseStatus" jdbcType="INTEGER" />
+    <result column="qk_license_url" property="qkLicenseUrl" jdbcType="VARCHAR" />
+    <result column="qk_city" property="qkCity" jdbcType="VARCHAR" />
+    <result column="qk_comment" property="qkComment" jdbcType="VARCHAR" />
+    <result column="qk_create" property="qkCreate" jdbcType="TIMESTAMP" />
+    <result column="qk_self_name" property="qkSelfName" jdbcType="VARCHAR" />
+    <result column="qk_credit_code" property="qkCreditCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="EntityResult" type="com.qingke.apiplatform.entity.admin.QingkeEntity" extends="BaseResultMap">
+    <result column="focus_time" property="focusTime" jdbcType="DATE" />
+    <result column="status_updatetime" property="statusUpdatetime" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    qk_numb, qk_name, qk_openId, qk_sex, qk_nation, qk_birth, qk_phone, qk_id, qkid_frontphoto_url, 
+    qkid_backphoto_url, qkid_status, qkid_address, qkid_validity, qk_video_url, qk_video_status, 
+    qk_sign_url, qk_sign_status, qk_license_status, qk_license_url, qk_city, qk_comment, 
+    qk_create,qk_self_name,qk_credit_code,qk_video_rate
+  </sql>
+
+  <sql id="Query_Where">
+    <if test="name!=''">
+      <bind name="pattern" value="'%' + name + '%'" />
+      and qk_name LIKE #{pattern}
+    </if>
+
+    <if test="qkidStatus!=-1">
+      and qkid_status  = #{qkidStatus}
+    </if>
+
+    <if test="qkVideoStatus!=-1">
+      and qk_video_status = #{qkVideoStatus}
+    </if>
+
+    <if test="qkLicenseStatus!=-1">
+      and qk_license_status = #{qkLicenseStatus}
+    </if>
+    <if test="qkPhone!=''">
+      and qk_phone = #{qkPhone}
+    </if>
+    <if test="startDate!='' and startDate!=null">
+      <!--<![CDATA[ and qk_create >= to_date(#{startDate,jdbcType=DATE},'yyyy-MM-dd hh24:mi:ss')]]>-->
+      and qk_create <![CDATA[ >= ]]> #{startDate}
+    </if>
+    <if test="endDate!='' and endDate!=null">
+      <!--<![CDATA[ and qk_create >= to_date(#{endDate,jdbcType=DATE},'yyyy-MM-dd hh24:mi:ss')]]>-->
+      and qk_create <![CDATA[ <= ]]> #{endDate}
+    </if>
+    <if test="idCode!='' and idCode!=null" >
+      <bind name="pattern" value="'%' + idCode + '%'" />
+      and qk_id LIKE #{pattern}
+    </if>
+
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from qingke
+    where qk_numb = #{qkNumb,jdbcType=INTEGER}
+  </select>
+  <select id="selectByOpenId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from qingke
+    where qk_openId = #{qkOpenId,jdbcType=VARCHAR}
+    order by qk_numb
+    limit 0,1
+  </select>
+
+  <select id="selectByProjectId" resultMap="EntityResult" parameterType="java.lang.Integer" >
+    select q.qk_numb, qk_name, qk_openId,
+      qk_sex, qk_nation, qk_birth,
+      qk_phone, qk_id, qkid_frontphoto_url,
+      qkid_backphoto_url, qkid_status, qkid_address,
+      qkid_validity, qk_video_url, qk_video_status,
+      pq.sign_url as qk_sign_url, pq.sign_status as qk_sign_status, qk_license_status,
+      qk_license_url, qk_city, qk_comment,
+      qk_create,qk_self_name,qk_credit_code,pq.focus_time,pq.status_updatetime from qingke q inner join project_qingke pq on q.qk_numb = pq.qk_numb
+    where pq.p_numb = #{projectId,jdbcType=VARCHAR} order by q.qk_numb desc
+  </select>
+   <select id="selectByMobile" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from qingke
+    where qk_phone = #{qkPhone,jdbcType=VARCHAR}
+  </select>
+  <select id="query" parameterType="com.qingke.apiplatform.entity.admin.QingkeQueryEntity" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from qingke where 1=1
+    <include refid="Query_Where"></include>
+     ORDER BY QK_CREATE DESC
+    <if test="limit>0">
+      limit #{offset,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <select id="queryCount"  parameterType="com.qingke.apiplatform.entity.admin.QingkeQueryEntity" resultType="int">
+    select
+    count(1)
+    from qingke where 1=1
+    <include refid="Query_Where"></include>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from qingke
+    where qk_numb = #{qkNumb,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qingke.apiplatform.model.Qingke" >
+    insert into qingke (qk_numb, qk_name, qk_openId, 
+      qk_sex, qk_nation, qk_birth, 
+      qk_phone, qk_id, qkid_frontphoto_url, 
+      qkid_backphoto_url, qkid_status, qkid_address, 
+      qkid_validity, qk_video_url, qk_video_status, 
+      qk_sign_url, qk_sign_status, qk_license_status, 
+      qk_license_url, qk_city, qk_comment,
+      qk_create,qk_self_name,qk_credit_code)
+    values (#{qkNumb,jdbcType=INTEGER}, #{qkName,jdbcType=VARCHAR}, #{qkOpenid,jdbcType=VARCHAR}, 
+      #{qkSex,jdbcType=BIT}, #{qkNation,jdbcType=VARCHAR}, #{qkBirth,jdbcType=DATE}, 
+      #{qkPhone,jdbcType=VARCHAR}, #{qkId,jdbcType=VARCHAR}, #{qkidFrontphotoUrl,jdbcType=VARCHAR}, 
+      #{qkidBackphotoUrl,jdbcType=VARCHAR}, #{qkidStatus,jdbcType=INTEGER}, #{qkidAddress,jdbcType=VARCHAR}, 
+      #{qkidValidity,jdbcType=VARCHAR}, #{qkVideoUrl,jdbcType=VARCHAR}, #{qkVideoStatus,jdbcType=INTEGER}, 
+      #{qkSignUrl,jdbcType=VARCHAR}, #{qkSignStatus,jdbcType=INTEGER}, #{qkLicenseStatus,jdbcType=INTEGER}, 
+      #{qkLicenseUrl,jdbcType=VARCHAR}, #{qkCity,jdbcType=VARCHAR}, #{qkComment,jdbcType=VARCHAR}, 
+      #{qkCreate,jdbcType=TIMESTAMP},#{qkSelfName,jdbcType=VARCHAR},#{qkCreditCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qingke.apiplatform.model.Qingke" >
+    insert into qingke
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="qkNumb != null" >
+        qk_numb,
+      </if>
+      <if test="qkName != null" >
+        qk_name,
+      </if>
+      <if test="qkOpenid != null" >
+        qk_openId,
+      </if>
+      <if test="qkSex != null" >
+        qk_sex,
+      </if>
+      <if test="qkNation != null" >
+        qk_nation,
+      </if>
+      <if test="qkBirth != null" >
+        qk_birth,
+      </if>
+      <if test="qkPhone != null" >
+        qk_phone,
+      </if>
+      <if test="qkId != null" >
+        qk_id,
+      </if>
+      <if test="qkidFrontphotoUrl != null" >
+        qkid_frontphoto_url,
+      </if>
+      <if test="qkidBackphotoUrl != null" >
+        qkid_backphoto_url,
+      </if>
+      <if test="qkidStatus != null" >
+        qkid_status,
+      </if>
+      <if test="qkidAddress != null" >
+        qkid_address,
+      </if>
+      <if test="qkidValidity != null" >
+        qkid_validity,
+      </if>
+      <if test="qkVideoUrl != null" >
+        qk_video_url,
+      </if>
+      <if test="qkVideoStatus != null" >
+        qk_video_status,
+      </if>
+      <if test="qkSignUrl != null" >
+        qk_sign_url,
+      </if>
+      <if test="qkSignStatus != null" >
+        qk_sign_status,
+      </if>
+      <if test="qkLicenseStatus != null" >
+        qk_license_status,
+      </if>
+      <if test="qkLicenseUrl != null" >
+        qk_license_url,
+      </if>
+      <if test="qkCity != null" >
+        qk_city,
+      </if>
+      <if test="qkComment != null" >
+        qk_comment,
+      </if>
+      <if test="qkCreate != null" >
+        qk_create,
+      </if>
+      <if test="qkSelfName != null" >
+        qk_self_name,
+      </if>
+      <if test="qkCreditCode != null" >
+        qk_credit_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="qkNumb != null" >
+        #{qkNumb,jdbcType=INTEGER},
+      </if>
+      <if test="qkName != null" >
+        #{qkName,jdbcType=VARCHAR},
+      </if>
+      <if test="qkOpenid != null" >
+        #{qkOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="qkSex != null" >
+        #{qkSex,jdbcType=BIT},
+      </if>
+      <if test="qkNation != null" >
+        #{qkNation,jdbcType=VARCHAR},
+      </if>
+      <if test="qkBirth != null" >
+        #{qkBirth,jdbcType=DATE},
+      </if>
+      <if test="qkPhone != null" >
+        #{qkPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="qkId != null" >
+        #{qkId,jdbcType=VARCHAR},
+      </if>
+      <if test="qkidFrontphotoUrl != null" >
+        #{qkidFrontphotoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qkidBackphotoUrl != null" >
+        #{qkidBackphotoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qkidStatus != null" >
+        #{qkidStatus,jdbcType=INTEGER},
+      </if>
+      <if test="qkidAddress != null" >
+        #{qkidAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="qkidValidity != null" >
+        #{qkidValidity,jdbcType=VARCHAR},
+      </if>
+      <if test="qkVideoUrl != null" >
+        #{qkVideoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qkVideoStatus != null" >
+        #{qkVideoStatus,jdbcType=INTEGER},
+      </if>
+      <if test="qkSignUrl != null" >
+        #{qkSignUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qkSignStatus != null" >
+        #{qkSignStatus,jdbcType=INTEGER},
+      </if>
+      <if test="qkLicenseStatus != null" >
+        #{qkLicenseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="qkLicenseUrl != null" >
+        #{qkLicenseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qkCity != null" >
+        #{qkCity,jdbcType=VARCHAR},
+      </if>
+      <if test="qkComment != null" >
+        #{qkComment,jdbcType=VARCHAR},
+      </if>
+      <if test="qkCreate != null" >
+        #{qkCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qkCreditCode != null" >
+        #{qkCreditCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qingke.apiplatform.model.Qingke" >
+    update qingke
+    <set >
+      <if test="qkName != null" >
+        qk_name = #{qkName,jdbcType=VARCHAR},
+      </if>
+      <if test="qkOpenid != null" >
+        qk_openId = #{qkOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="qkSex != null" >
+        qk_sex = #{qkSex,jdbcType=BIT},
+      </if>
+      <if test="qkNation != null" >
+        qk_nation = #{qkNation,jdbcType=VARCHAR},
+      </if>
+      <if test="qkBirth != null" >
+        qk_birth = #{qkBirth,jdbcType=DATE},
+      </if>
+      <if test="qkPhone != null" >
+        qk_phone = #{qkPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="qkId != null" >
+        qk_id = #{qkId,jdbcType=VARCHAR},
+      </if>
+      <if test="qkidFrontphotoUrl != null" >
+        qkid_frontphoto_url = #{qkidFrontphotoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qkidBackphotoUrl != null" >
+        qkid_backphoto_url = #{qkidBackphotoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qkidStatus != null" >
+        qkid_status = #{qkidStatus,jdbcType=INTEGER},
+      </if>
+      <if test="qkidAddress != null" >
+        qkid_address = #{qkidAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="qkidValidity != null" >
+        qkid_validity = #{qkidValidity,jdbcType=VARCHAR},
+      </if>
+      <if test="qkVideoUrl != null" >
+        qk_video_url = #{qkVideoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qkVideoStatus != null" >
+        qk_video_status = #{qkVideoStatus,jdbcType=INTEGER},
+      </if>
+      <if test="qkVideoRate != null" >
+        qk_video_rate = #{qkVideoRate,jdbcType=VARCHAR},
+      </if>
+      <if test="qkSignUrl != null" >
+        qk_sign_url = #{qkSignUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qkSignStatus != null" >
+        qk_sign_status = #{qkSignStatus,jdbcType=INTEGER},
+      </if>
+      <if test="qkLicenseStatus != null" >
+        qk_license_status = #{qkLicenseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="qkLicenseUrl != null" >
+        qk_license_url = #{qkLicenseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="qkCity != null" >
+        qk_city = #{qkCity,jdbcType=VARCHAR},
+      </if>
+      <if test="qkComment != null" >
+        qk_comment = #{qkComment,jdbcType=VARCHAR},
+      </if>
+      <if test="qkCreate != null" >
+        qk_create = #{qkCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qkSelfName != null" >
+        qk_self_name = #{qkSelfName,jdbcType=VARCHAR},
+      </if>
+      <if test="qkCreditCode != null" >
+        qk_credit_code = #{qkCreditCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where qk_numb = #{qkNumb,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qingke.apiplatform.model.Qingke" >
+    update qingke
+    set qk_name = #{qkName,jdbcType=VARCHAR},
+      qk_openId = #{qkOpenid,jdbcType=VARCHAR},
+      qk_sex = #{qkSex,jdbcType=BIT},
+      qk_nation = #{qkNation,jdbcType=VARCHAR},
+      qk_birth = #{qkBirth,jdbcType=DATE},
+      qk_phone = #{qkPhone,jdbcType=VARCHAR},
+      qk_id = #{qkId,jdbcType=VARCHAR},
+      qkid_frontphoto_url = #{qkidFrontphotoUrl,jdbcType=VARCHAR},
+      qkid_backphoto_url = #{qkidBackphotoUrl,jdbcType=VARCHAR},
+      qkid_status = #{qkidStatus,jdbcType=INTEGER},
+      qkid_address = #{qkidAddress,jdbcType=VARCHAR},
+      qkid_validity = #{qkidValidity,jdbcType=VARCHAR},
+      qk_video_url = #{qkVideoUrl,jdbcType=VARCHAR},
+      qk_video_status = #{qkVideoStatus,jdbcType=INTEGER},
+      qk_video_rate = #{qkVideoRate, jdbcType=VARCHAR},
+      qk_sign_url = #{qkSignUrl,jdbcType=VARCHAR},
+      qk_sign_status = #{qkSignStatus,jdbcType=INTEGER},
+      qk_license_status = #{qkLicenseStatus,jdbcType=INTEGER},
+      qk_license_url = #{qkLicenseUrl,jdbcType=VARCHAR},
+      qk_city = #{qkCity,jdbcType=VARCHAR},
+      qk_comment = #{qkComment,jdbcType=VARCHAR},
+      qk_create = #{qkCreate,jdbcType=TIMESTAMP},
+      qk_self_name= #{qkSelfName,jdbcType=VARCHAR},
+      qk_credit_code= #{qkCreditCode,jdbcType=VARCHAR}
+    where qk_numb = #{qkNumb,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateBySignUrl" parameterType="com.qingke.apiplatform.model.Qingke" >
+    update qingke set qk_sign_status = #{qkSignStatus,jdbcType=INTEGER}
+    where  qk_sign_url = #{qkSignUrl,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,21 @@
+微信号： gh_291bf8c59449
+
+appID
+wx3a93dc1af4b3d70f
+
+appsecret
+efd0bf9f2445430f1929bc88b3d17044
+
+
+http://localhost:9008/resouces/swagger/index.html
+
+wx_ticket = gQFO8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyRjFZZTFCR1JmNmoxMDAwME0wM0MAAgRdCPBbAwQAAAAA
+
+https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQFO8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyRjFZZTFCR1JmNmoxMDAwME0wM0MAAgRdCPBbAwQAAAAA
+
+{"button":[{"type":"view","name":"成为轻客","url":"https://qingke.aivplus.com/"},{"type":"view","name":"了解轻客","url":"https://qingke.aivplus.com/"}]}
+{"button":[{"type":"view","name":"成为轻客","url":"https://qingke.91qingker.com/"},{"type":"view","name":"了解轻客","url":"https://qingke.91qingker.com/"}]}
+
+http://47.95.194.119:9008/
+
+4 gQFZ8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyUGppTTBKR1JmNmoxMDAwME0wM0MAAgQ42fdbAwQAAAAA

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qingke.apiplatform.mapper.ProjectStatusMapper" >
+  <resultMap id="BaseResultMap" type="com.qingke.apiplatform.model.ProjectStatus" >
+    <result column="pstatus_numb" property="pstatusNumb" jdbcType="INTEGER" />
+    <result column="pstatus_name" property="pstatusName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectAllStatus" resultMap="BaseResultMap">
+    select pstatus_numb,pstatus_name from project_status
+  </select>
+  <insert id="insert" parameterType="com.qingke.apiplatform.model.ProjectStatus" >
+    insert into project_status (pstatus_numb, pstatus_name)
+    values (#{pstatusNumb,jdbcType=INTEGER}, #{pstatusName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qingke.apiplatform.model.ProjectStatus" >
+    insert into project_status
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pstatusNumb != null" >
+        pstatus_numb,
+      </if>
+      <if test="pstatusName != null" >
+        pstatus_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pstatusNumb != null" >
+        #{pstatusNumb,jdbcType=INTEGER},
+      </if>
+      <if test="pstatusName != null" >
+        #{pstatusName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

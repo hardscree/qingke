@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qingke.apiplatform.mapper.QingkeStatusMapper" >
+  <resultMap id="BaseResultMap" type="com.qingke.apiplatform.model.QingkeStatus" >
+    <result column="qk_status_number" property="qkStatusNumber" jdbcType="INTEGER" />
+    <result column="qk_status_name" property="qkStatusName" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.qingke.apiplatform.model.QingkeStatus" >
+    insert into qingke_status (qk_status_number, qk_status_name)
+    values (#{qkStatusNumber,jdbcType=INTEGER}, #{qkStatusName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qingke.apiplatform.model.QingkeStatus" >
+    insert into qingke_status
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="qkStatusNumber != null" >
+        qk_status_number,
+      </if>
+      <if test="qkStatusName != null" >
+        qk_status_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="qkStatusNumber != null" >
+        #{qkStatusNumber,jdbcType=INTEGER},
+      </if>
+      <if test="qkStatusName != null" >
+        #{qkStatusName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

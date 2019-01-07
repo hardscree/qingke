@@ -1,0 +1,124 @@
+
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+      # 使用druid数据源
+      type: com.alibaba.druid.pool.DruidDataSource
+      filters: stat
+      maxActive: 20
+      initialSize: 1
+      maxWait: 60000
+      minIdle: 1
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 1 from dual
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: false
+      maxOpenPreparedStatements: 20
+      connectionInitSqls:
+  jms:
+      enabled: false
+  mvc:
+    static-path-pattern: /resources/**
+  resources:
+    static-locations: classpath:/static,classpath:/public,classpath:/resources,classpath:/META-INF/resources
+  jackson:
+    #date-format: java.text.SimpleDateFormat    #或正则yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8    #或UTC
+mybatis:
+  mapper-locations: classpath:mapping/**/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
+  type-aliases-package: com.qingke.apiplatform.model  # 注意：对应实体类的路径
+qingke:
+  image:
+    host: https://wx.91qingker.com/
+  frontend: https://qingke.91qingker.com/index.html
+  filePath: /opt/qingke/resources/
+  fileMapName: qkimg 
+weixin: 
+  appId: wx9bbc5dc429ca36f0
+ali: 
+  sms: 
+    appId: LTAIK6KoxT4OLVJg
+    secret: DThdKzdc7LO0iAwFsMjwqKIR6qKxm0
+    
+faceid:
+  returnUrl: https://wx.91qingker.com/api/qingke/returnUrl
+  notifyUrl: https://wx.91qingker.com/api/qingke/video/result
+logging:
+  level:
+    org.springframework.web: INFO
+    com.qingke.apiplatform: DEBUG
+    me.chanjar.weixin: DEBUG
+wx:
+  mp:
+    configs:
+      - appId: wx9bbc5dc429ca36f0
+        secret: 485ad0e25fbc994084f3bbf7f7a3720a
+        token: qingke2018
+        aesKey: voUDauDHahzhousdUjWvMiLBsGseO8T0wAxfOWNioTW
+          
+server:
+  port: 9008
+token:
+  key: 11111111
+  expire: 3600
+  qingke:
+    expire: 360000
+uploadFolder:
+  protocolFolder:
+
+export:
+  qingkeTemplate: /Users/hardstone/Work/svn/QingKe/documents/轻客平台导出表.xlsx
+---
+#开发环境配置
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/qingke?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: qingke
+    password: Qk2018!@#
+  http: 
+    multipart: 
+      maxFileSize: 20MB
+      maxRequestSize: 20MB
+  mvc:
+    static-path-pattern: /resources/**
+  resources:
+    static-locations: classpath:/static,classpath:/public,classpath:/resources,classpath:/META-INF/resources
+---
+#生产环境配置
+spring:
+  profiles: prod
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/qingke?useUnicode=true&characterEncoding=UTF-8
+    username: ecology
+    password: oa123456
+  http: 
+    multipart: 
+      maxFileSize: 1Mb
+      maxRequestSize: 1Mb
+---
+#测试环境配置
+spring:
+  profiles: test
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/qingke?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: 123456
+  http: 
+    multipart: 
+      maxFileSize: 1Mb
+      maxRequestSize: 1Mb
+---
+debug: true
+logging:
+   config:
+     classpath: logback-spring.xml
+
